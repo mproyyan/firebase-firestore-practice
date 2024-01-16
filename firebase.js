@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { deleteDoc, doc, getFirestore, setDoc } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -12,5 +12,35 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
+
+const addDocument = async () => {
+    try {
+        const cityRef = doc(db, "cities", "deleted")
+        const city = await setDoc(cityRef, {
+            name: "new city",
+            state: "new state",
+            country: "new city",
+            capital: false
+        })
+
+        console.log(city)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+addDocument()
+
+const deleteDocument = async () => {
+    try {
+        const cityRef = doc(db, "cities", "deleted")
+        const deleted = await deleteDoc(cityRef)
+        console.log(deleted)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+deleteDocument()
 
 export default db
