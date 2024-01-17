@@ -6,6 +6,18 @@
   <title>Practice</title>
 </head>
 <body>
+
+  <h1 id="likes"></h1>
+  <button id="addLike">Like</button>
   
+  <script type="module" src="/firebase.js"></script>
+  <script type="module">
+    import { likes, currentLikes } from "/firebase.js"
+
+    currentLikes()
+    
+    const addLikeButton = document.getElementById("addLike")
+    addLikeButton.addEventListener("click", likes)
+  </script>
 </body>
 </html>
