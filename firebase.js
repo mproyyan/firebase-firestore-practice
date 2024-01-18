@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, query, collection, where, getDocs } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -12,5 +12,20 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
+
+const queryCapitalCity = async () => {
+    try {
+        const citiesRef = collection(db, "cities");
+        const q = query(citiesRef, where("capital", "==", true))
+        const cities = await getDocs(q)
+        cities.forEach(city => {
+            console.log(city.data())
+        });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+queryCapitalCity()
 
 export default db
