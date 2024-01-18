@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, query, where, orderBy, limit, collection, getDocs } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -12,5 +12,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
+
+const orderByPopulation = async () => {
+    const citiesRef = collection(db, "cities")
+    const q = query(citiesRef, where("population", ">", 100000), orderBy("population", "desc"), limit(2));
+    const cities = await getDocs(q)
+    cities.forEach(city => {
+        console.log(city.data())
+    });
+}
+
+orderByPopulation()
 
 export default db
