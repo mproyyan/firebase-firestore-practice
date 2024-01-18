@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, collection, getAggregateFromServer, count, sum, average } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -12,5 +12,24 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
+
+const aggregation = async () => {
+    try {
+        const coll = collection(db, 'cities');
+        const snapshot = await getAggregateFromServer(coll, {
+            countOfDocs: count(),
+            totalPopulation: sum('population'),
+            averagePopulation: average('population')
+        });
+        console.log('countOfDocs: ', snapshot.data().countOfDocs);
+        console.log('totalPopulation: ', snapshot.data().totalPopulation);
+        console.log('averagePopulation: ', snapshot.data().averagePopulation);
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+aggregation()
 
 export default db
