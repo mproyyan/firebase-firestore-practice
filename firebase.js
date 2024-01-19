@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app"
-import { getFirestore } from "firebase/firestore"
+import { getFirestore, orderBy, query, where, getDocs, collection } from "firebase/firestore"
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FB_API_KEY,
@@ -12,5 +12,25 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app)
+
+const compositeIndex = async () => {
+    try {
+        const citiesRef = collection(db, "cities")
+
+        const q = query(citiesRef, where("country", "==", "USA"), orderBy("population", "asc"))
+        const cities = await getDocs(q)
+
+        // const q = query(citiesRef, where("regions", "array-contains", "east_coast"), where("capital", "==", true))
+        // const cities = await getDocs(q)
+
+        cities.forEach(city => {
+            console.log(city.data())
+        });
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+compositeIndex()
 
 export default db
